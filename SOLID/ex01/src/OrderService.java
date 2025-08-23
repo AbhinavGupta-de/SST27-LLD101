@@ -1,13 +1,5 @@
-public class OrderService implements IOrderService
+public record OrderService(IEmailClient email, IOrderRepository repository) implements IOrderService
 {
-	private final IEmailClient email;
-	private final IOrderRepository repository;
-
-	public OrderService(IEmailClient email, IOrderRepository repository)
-	{
-		this.email = email;
-		this.repository = repository;
-	}
 
 	double totalWithTax(double subtotal)
 	{
