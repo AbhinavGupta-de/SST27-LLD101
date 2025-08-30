@@ -10,12 +10,23 @@ import java.util.Properties;
  * not thread-safe, reload allowed anytime, mutable global state, reflection+serialization-friendly.
  */
 public class AppSettings implements Serializable {
+    private static final long serialVersionUID = 1L;
+    private static boolean instanceCreated = false;
     private final Properties props = new Properties();
 
-    public AppSettings() { } // should not be public for true singleton
+    private AppSettings() {
+        if (instanceCreated) {
+            throw new RuntimeException("Reflection is not allowed. Use getInstance().");
+        }
+        instanceCreated = true;
+    }
+
+    private static class Holder {
+        private static final AppSettings INSTANCE = new AppSettings();
+    }
 
     public static AppSettings getInstance() {
-        return new AppSettings(); // returns a fresh instance (bug)
+        return Holder.INSTANCE;
     }
 
     public void loadFromFile(Path file) {
@@ -28,5 +39,9 @@ public class AppSettings implements Serializable {
 
     public String get(String key) {
         return props.getProperty(key);
+    }
+
+    private Object readResolve() throws ObjectStreamException {
+        return getInstance();
     }
 }
