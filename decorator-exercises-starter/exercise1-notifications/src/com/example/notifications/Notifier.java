@@ -1,5 +1,6 @@
 package com.example.notifications;
 
-public interface Notifier {
-    void notify(String text);
+public interface Notifier
+{
+	void notify(String text);
 }
